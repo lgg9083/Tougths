@@ -22,7 +22,6 @@ app.set("view engine", "handlebars");
 app.use(express.urlencoded({
   extended: true
 }));
-
 //session middleare
 app.use(
   session({

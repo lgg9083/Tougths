@@ -1,26 +1,48 @@
 const { where } = require("sequelize");
 const Tought = require("../models/Tougths");
 const User = require("../models/User");
-
+const {Op} = require('sequelize')
 module.exports = class ToughtController {
-  static showTougths(req, res) {
-    console.log("chegando");
-    res.render("toughts/home");
+  static async showTougths(req, res) {
+    let search = ''
+    if(req.query.search){
+      search = req.query.search
+    }
+    let order = 'DESC'
+    if(req.query.order === 'old'){
+      order = 'ASC'
+    }else {
+      order = 'DESC'
+    }
+    const toughtData = await Tought.findAll({
+      include: User,
+      where:{
+        title:{[Op.like]: `%${search}%`}
+      },
+      order:[['createdAt', order]]
+    });
+    const tought = toughtData.map((result) => result.get({ plain: true }));
+    let qtdtougths = tought.length
+
+    if(qtdtougths === 0){
+      qtdtougths = false
+    }
+    console.log(tought)
+    res.render("toughts/home", { tought, search, qtdtougths });
   }
   static async dashboard(req, res) {
     const userid = req.session.userid;
-
+ 
     if (!userid) {
       res.render("auth/login");
     }
-
+    
     const user = await User.findOne({
       where: { id: userid },
       include: Tought,
       plain: true,
     });
     let toughtempy = false;
-
     const toughts = user.Toughts.map((resultad) => resultad.dataValues);
     if (toughts.length === 0) {
       toughtempy = true;
@@ -70,9 +92,9 @@ module.exports = class ToughtController {
   static async editToughtPost(req, res) {
     const id = req.body.id;
     const tougths = {
-      title: req.body.title
+      title: req.body.title,
     };
-    
+
     try {
       Tought.update(tougths, { where: { id: id } });
       req.flash("message", "Pensamento atualizado com sucesso");
