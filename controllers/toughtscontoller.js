@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const Tought = require("../models/Tougths");
 const User = require("../models/User");
 
@@ -57,6 +58,27 @@ module.exports = class ToughtController {
       });
     } catch (err) {
       console.log("aconteceu um erro: ", err);
+    }
+  }
+  static async editTought(req, res) {
+    const id = req.params.id;
+    console.log(id);
+    const tougth = await Tought.findOne({ where: { id: id }, raw: true });
+    console.log(tougth);
+    res.render("toughts/edit", { tougth });
+  }
+  static async editToughtPost(req, res) {
+    const id = req.body.id;
+    const tougths = {
+      title: req.body.title
+    };
+    
+    try {
+      Tought.update(tougths, { where: { id: id } });
+      req.flash("message", "Pensamento atualizado com sucesso");
+      res.redirect("/toughts/dashboard");
+    } catch (err) {
+      console.log(err);
     }
   }
 };
