@@ -1,0 +1,45 @@
+# Dependências do Node
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Diretórios de build
+dist/
+build/
+
+# Arquivos de configuração do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ambiente de desenvolvimento
+.env
+
+# Diretórios temporários
+tmp/
+temp/
+
+# Cache do npm
+.npm/
+
+# Cache do yarn
+.yarn/
+
+# Arquivos de lock
+package-lock.json
+yarn.lock
+
+# Teste de cobertura
+coverage/
+
+# Configurações do IDE
+.idea/
+.vscode/
+
+# Arquivos do sistema operacional
+*.swp
+*.swo
